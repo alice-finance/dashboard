@@ -13,7 +13,7 @@ import {
   Popper,
   Typography
 } from "@material-ui/core";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, MouseEvent } from "react";
 import Logo from "./Logo";
 
 import UserDefaultImage from "../assets/images/author/user-image.jpg";
@@ -23,11 +23,16 @@ import { NavLink, Redirect } from "react-router-dom";
 import FontAwesome from "../utils/FontAwesome";
 import Image from "./Image";
 import { PopperPlacementType } from "@material-ui/core/Popper";
+import { ReferenceObject } from "popper.js";
+import { toast } from "react-toastify";
+
+import "./Header.scss";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState<PopperPlacementType>("top");
-  const [anchorEl, setAnchorEl] = useState<EventTarget | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | ReferenceObject | (() => ReferenceObject)>(null);
+  const [sideMenu, setSideMenu] = useState(false);
 
   const handleClickAway = useCallback(() => {
     setOpen(false);
@@ -45,22 +50,40 @@ const Header = () => {
     [open, placement]
   );
 
+  const logOutHandler = useCallback(() => {
+    cookie.remove("Auth");
+    toast.warn("You have been loged out");
+
+    setOpen(false);
+    setSideMenu(false);
+    setAnchorEl(null);
+    setPlacement("top");
+  }, []);
+
+  const sMenuHandler = useCallback(() => {
+    setSideMenu(!sideMenu);
+  }, [sideMenu]);
+
+  const sMenuHandleClose = useCallback(() => {
+    setSideMenu(false);
+  }, []);
+
   const Auth = cookie.get("Auth");
   if (!Auth) {
     return <Redirect to="/login" />;
   }
 
   return (
-    <Grid className="mainHeadeArea">
+    <Grid className="mainHeaderArea">
       <Grid container alignItems="center" className="container">
         <Grid item xs={12} sm={4} md={2}>
-          <Logo logo={logo} alt="CryptWallet" link="/dashboard" />
+          <Logo logo={logo} alt="Dashboard" link="/" />
         </Grid>
         <Hidden smDown>
           <Grid item md={8}>
             <List className="mainMenu">
               <ListItem className="menuItem">
-                <NavLink to="/dashboard">Dashboard</NavLink>
+                <NavLink to="/">Dashboard</NavLink>
               </ListItem>
               <ListItem className="menuItem">
                 <NavLink to="/buy-coin">Buy Coin</NavLink>
@@ -124,7 +147,7 @@ const Header = () => {
             </Grid>
           </ClickAwayListener>
           <Hidden mdUp>
-            <IconButton className="hamBurger" color="primary" aria-label="Menu" onClick={this.sMenuHandler}>
+            <IconButton className="hamBurger" color="primary" aria-label="Menu" onClick={sMenuHandler}>
               <FontAwesome name={sideMenu ? "times" : "bars"} />
             </IconButton>
           </Hidden>
@@ -132,7 +155,7 @@ const Header = () => {
       </Grid>
       <Hidden mdUp>
         <Grid className={`sidebarMenu ${sideMenu ? "showSidebar" : ""}`}>
-          <Typography onClick={this.sMenuHandleClose} component="div" className="backDrop" />
+          <Typography onClick={sMenuHandleClose} component="div" className="backDrop" />
           <MenuList>
             <MenuItem>
               <NavLink to="/dashboard">Dashboard</NavLink>

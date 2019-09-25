@@ -1,0 +1,40 @@
+.mnemonicBody {
+  margin-top: 25px;
+  padding: 0 100px;
+}
+
+.inputStyle {
+  margin-bottom: 40px;
+
+  fieldset {
+    border-radius: 0px;
+    border: 1px solid #E9E9E9;
+  }
+
+  input {
+    font-weight: 600;
+    font-family: Hind Vadodara;
+    font-style: normal;
+    font-size: 15px;
+    color: #666666;
+  }
+}
+
+.formSubmitBtn {
+  background: #6258fb;
+  border-radius: 1px;
+  height: 65px;
+  line-height: 65px;
+  color: #fff;
+  left: 0;
+  width: 207px;
+  padding: 0;
+  text-transform: capitalize;
+  font-weight: 700;
+  font-family: Hind Vadodara;
+  transition: all 0.3s ease 0s;
+
+  &:hover {
+    background: #6258fb;
+  }
+}

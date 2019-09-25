@@ -1,0 +1,16 @@
+.wrapper {
+  margin-top: -230px;
+  margin-bottom: 100px;
+}
+
+.section {
+  background: #fff;
+  padding: 44px 80px;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.04);
+  @media (max-width: 991px) {
+    padding: 44px 30px;
+  }
+  @media (max-width: 767px) {
+    padding: 40px 15px;
+  }
+}

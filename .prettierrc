@@ -1,5 +1,15 @@
 {
   "bracketSpacing": true,
   "endOfLine": "lf",
-  "printWidth": 120
+  "printWidth": 120,
+  "tabWidth": 2,
+  "jsxBracketSameLine": true,
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
 }
