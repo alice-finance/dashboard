@@ -6,18 +6,17 @@ import "./Mnemonic.scss";
 import useStoredWallet from "../../hook/useStoredWallet";
 import Alice from "@alice-finance/alice.js/dist";
 import cookie from "js-cookie";
-import useReactRouter from "use-react-router";
 import { ChainContext } from "../../contexts/AliceContext";
 import { toast } from "react-toastify";
+import { Redirect } from "react-router";
 
 const useTestnet = false;
 
 const ImportMnemonic = () => {
     const { setMnemonic, setEthereumChain, setLoomChain } = useContext(ChainContext);
-    const { history } = useReactRouter();
     const [mnemonic, setInputMnemonic] = useState("");
     const [password, setPassword] = useState("");
-
+    const [auth, setAuth] = useState(false);
     const wallet = useStoredWallet();
 
     const handleMnemonicChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -52,7 +51,7 @@ const ImportMnemonic = () => {
 
                         cookie.set("Auth", "true");
 
-                        history.replace("/");
+                        setAuth(true);
                     } else {
                         toast.error("Your seed phrase cannot be used. please try other one.");
                     }
@@ -61,8 +60,12 @@ const ImportMnemonic = () => {
                     toast.error(error);
                 });
         },
-        [mnemonic, wallet, password, setMnemonic, setEthereumChain, setLoomChain, history]
+        [mnemonic, wallet, password, setMnemonic, setEthereumChain, setLoomChain]
     );
+
+    if (auth) {
+        return <Redirect to="/" />;
+    }
 
     return (
         <Grid className="container">

@@ -6,15 +6,15 @@ import { toast } from "react-toastify";
 import Alice from "@alice-finance/alice.js/dist";
 import cookie from "js-cookie";
 import { ChainContext } from "../../contexts/AliceContext";
-import useReactRouter from "use-react-router";
 
 const useTestnet = false;
 
 const LoginPage: React.FC = () => {
     const { setMnemonic, setEthereumChain, setLoomChain } = useContext(ChainContext);
-    const { history } = useReactRouter();
+    // const { history } = useReactRouter();
     const { getEthAddress, getMnemonicWithPassword } = useStoredWallet();
     const [password, setPassword] = useState("");
+    const [auth, setAuth] = useState(false);
     const ethAddress = getEthAddress();
 
     const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,8 @@ const LoginPage: React.FC = () => {
 
                             cookie.set("Auth", "true");
 
-                            history.replace("/");
+                            // history.replace("/");
+                            setAuth(true);
                         } else {
                             toast.error("Your seed phrase cannot be used. please try other one.");
                         }
@@ -54,11 +55,15 @@ const LoginPage: React.FC = () => {
                 toast.error("Wrong Password");
             }
         },
-        [getMnemonicWithPassword, history, password, setEthereumChain, setLoomChain, setMnemonic]
+        [getMnemonicWithPassword, password, setEthereumChain, setLoomChain, setMnemonic]
     );
 
     if (!ethAddress) {
         return <Redirect to="/signup" />;
+    }
+
+    if (auth) {
+        return <Redirect to="/" />;
     }
 
     return (

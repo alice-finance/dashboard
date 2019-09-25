@@ -6,17 +6,19 @@ import Footer from "../components/Footer";
 import "./Route.scss";
 
 interface PublicRouteProps extends RouteProps {
-  icon?: string | undefined;
-  title?: string | undefined;
+    icon?: string | undefined;
+    title?: string | undefined;
 }
 
 const PublicRoute = (props: PublicRouteProps) => {
-  return (
-    <Fragment>
-      <Route {...props} render={props => <Component {...props} />} />
-      <Footer />
-    </Fragment>
-  );
+    const Component = props.component;
+    const rest = { ...props, component: null };
+    return (
+        <Fragment>
+            <Route {...rest} render={(props: PublicRouteProps) => <Component {...rest} />} />
+            <Footer />
+        </Fragment>
+    );
 };
 
 export default PublicRoute;
