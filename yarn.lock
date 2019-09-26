@@ -37,9 +37,9 @@
     openzeppelin-solidity "^2.3.0"
 
 "@alice-finance/dao-contracts@^0.1.0-beta.1":
-  version "0.1.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@alice-finance/dao-contracts/-/dao-contracts-0.1.0-beta.5.tgz#947578ee5de35805536928eb7dcb1ae2a86a9d49"
-  integrity sha512-CcD8W3vJpFY1XPfemIPT8HPfJqZqaAw/Tx7AYxpV93x3kfcXZaarajMSiDtPF9JAX/2TlGcCyWoCkFE9Kwy3uw==
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@alice-finance/dao-contracts/-/dao-contracts-0.1.0.tgz#c48254cf6ee893f6e4ca8e48879ac1a166cc2d93"
+  integrity sha512-UpxLmnSzOqH+E6FJQvxAZzqNWRsSA4Nz2yrCp5CUHy9b2Z6/2ucEonuBiBEYe1WMppQaE/tPZ2c4xlylw+ZW5w==
 
 "@alice-finance/money-market@^0.1.9":
   version "0.1.9"

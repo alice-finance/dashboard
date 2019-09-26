@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@alice-finance/alice.js": "^1.1.7",
-    "@alice-finance/dao-contracts": "^0.1.0-beta.1",
+    "@alice-finance/dao-contracts": "^0.1.0",
     "@date-io/core": "^1.3.11",
     "@material-ui/core": "^4.4.3",
     "@material-ui/icons": "^4.4.3",
