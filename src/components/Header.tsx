@@ -55,6 +55,17 @@ const Header = () => {
 
     const logOutHandler = useCallback(() => {
         cookie.remove("Auth");
+
+        toast.warn("You have been loged out");
+
+        setOpen(false);
+        setSideMenu(false);
+        setAnchorEl(null);
+        setPlacement("top");
+    }, []);
+
+    const resetHandler = useCallback(() => {
+        cookie.remove("Auth");
         reset();
 
         toast.warn("You have been loged out");
@@ -85,7 +96,7 @@ const Header = () => {
                     <Logo logo={logo} alt="Dashboard" link="/" />
                 </Grid>
                 <Hidden smDown>
-                    <Grid item md={8}>
+                    <Grid item md={6}>
                         <List className="mainMenu">
                             <ListItem className="menuItem">
                                 <NavLink exact to="/">
@@ -102,15 +113,12 @@ const Header = () => {
                     </Grid>
                 </Hidden>
 
-                <Grid item xs={12} sm={8} md={2} className="profileMenu">
+                <Grid item xs={12} sm={4} className="profileMenu">
                     <ClickAwayListener onClickAway={handleClickAway}>
                         <Grid>
                             <Button disableRipple className="profileBtn" onClick={handleClick("bottom-end")}>
-                                <Typography className="userImage" component="div">
-                                    <Image src={UserDefaultImage} />
-                                </Typography>
-                                <Typography className="userName" component="span">
-                                    John Doe
+                                <Typography className="userName" component="span" noWrap>
+                                    {ethereumAddress}
                                 </Typography>
                                 <FontAwesome name={!open ? "caret-down" : "caret-up"} />
                             </Button>
@@ -124,11 +132,18 @@ const Header = () => {
                                                     <NavLink to="/my-profile">My Profile</NavLink>
                                                 </ListItem>
                                                 {Auth ? (
-                                                    <ListItem>
-                                                        <Button onClick={logOutHandler} disableRipple>
-                                                            Sign Out
-                                                        </Button>
-                                                    </ListItem>
+                                                    <>
+                                                        <ListItem>
+                                                            <Button onClick={logOutHandler} disableRipple>
+                                                                Sign Out
+                                                            </Button>
+                                                        </ListItem>
+                                                        <ListItem>
+                                                            <Button onClick={resetHandler} disableRipple>
+                                                                RESET Account
+                                                            </Button>
+                                                        </ListItem>
+                                                    </>
                                                 ) : (
                                                     <ListItem>
                                                         <NavLink to="/login">Login</NavLink>

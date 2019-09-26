@@ -1,21 +1,20 @@
 import React, { ChangeEvent, FormEvent, useCallback, useContext, useState } from "react";
-import { Button, TextField } from "@material-ui/core";
+import { Button, Container, Grid, TextField, Typography } from "@material-ui/core";
 import useStoredWallet from "../../hook/useStoredWallet";
 import { Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import Alice from "@alice-finance/alice.js/dist";
 import cookie from "js-cookie";
-import { ChainContext } from "../../contexts/AliceContext";
-
-const useTestnet = false;
+import { ChainContext } from "../../contexts/ChainContext";
+import { useTestnet } from "../../constants/environment";
 
 const LoginPage: React.FC = () => {
     const { setMnemonic, setEthereumChain, setLoomChain } = useContext(ChainContext);
     // const { history } = useReactRouter();
-    const { getEthAddress, getMnemonicWithPassword } = useStoredWallet();
+    const { getEthAddress, getMnemonicWithPassword, setAlicePrivateKey, setEthPrivateKey, reset } = useStoredWallet();
     const [password, setPassword] = useState("");
     const [auth, setAuth] = useState(false);
-    const ethAddress = getEthAddress();
+    const [ethAddress, setEthAddress] = useState(getEthAddress());
 
     const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
@@ -27,6 +26,7 @@ const LoginPage: React.FC = () => {
 
             try {
                 const mnemonic = getMnemonicWithPassword(password);
+                console.log(mnemonic);
 
                 const alice = Alice.fromMnemonic(mnemonic, useTestnet);
                 const ethChain = alice.getEthereumChain();
@@ -39,6 +39,8 @@ const LoginPage: React.FC = () => {
                             setMnemonic(mnemonic);
                             setEthereumChain(ethChain);
                             setLoomChain(loomChain);
+                            setAlicePrivateKey(loomChain.getPrivateKey());
+                            setEthPrivateKey(ethChain.getPrivateKey());
 
                             cookie.set("Auth", "true");
 
@@ -55,8 +57,22 @@ const LoginPage: React.FC = () => {
                 toast.error("Wrong Password");
             }
         },
-        [getMnemonicWithPassword, password, setEthereumChain, setLoomChain, setMnemonic]
+        [
+            getMnemonicWithPassword,
+            password,
+            setAlicePrivateKey,
+            setEthPrivateKey,
+            setEthereumChain,
+            setLoomChain,
+            setMnemonic
+        ]
     );
+
+    const handleReset = useCallback(() => {
+        cookie.remove("Auth");
+        reset();
+        setEthAddress("");
+    }, [reset]);
 
     if (!ethAddress) {
         return <Redirect to="/signup" />;
@@ -67,12 +83,29 @@ const LoginPage: React.FC = () => {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <TextField label="Password" variant="outlined" value={password} onChange={handlePasswordChange} />
-                <Button type="submit">Login</Button>
-            </form>
-        </div>
+        <Container className="wrapper">
+            <Grid container className="section">
+                <Grid item>
+                    <form onSubmit={handleSubmit}>
+                        <Typography component="h1">Login</Typography>
+                        <Typography component="p">You are about to login to ethereum address [{ethAddress}]</Typography>
+                        <TextField
+                            label="Password"
+                            variant="outlined"
+                            value={password}
+                            onChange={handlePasswordChange}
+                        />
+                        <Button type="submit" variant="contained" color="primary">
+                            Login
+                        </Button>
+                    </form>
+                    <Typography component="p">You can reset saved account</Typography>
+                    <Button type="button" variant="contained" onClick={handleReset}>
+                        Reset
+                    </Button>
+                </Grid>
+            </Grid>
+        </Container>
     );
 };
 

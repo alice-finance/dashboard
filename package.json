@@ -43,7 +43,7 @@
     "react-dom": "^16.9.0",
     "react-helmet": "^5.2.1",
     "react-router": "^5.1.0",
-    "react-router-dom": "latest",
+    "react-router-dom": "^5.1.0",
     "react-scripts": "3.1.2",
     "react-toastify": "^5.4.0",
     "secure-ls": "^1.2.5",

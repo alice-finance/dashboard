@@ -1,6 +1,5 @@
-import React, { Fragment, Component } from "react";
-import { Route } from "react-router-dom";
-import { RouteProps } from "react-router";
+import React, { Fragment } from "react";
+import { Route, RouteProps } from "react-router-dom";
 import Footer from "../components/Footer";
 
 import "./Route.scss";
@@ -11,11 +10,12 @@ interface PublicRouteProps extends RouteProps {
 }
 
 const PublicRoute = (props: PublicRouteProps) => {
-    const Component = props.component;
-    const rest = { ...props, component: null };
+    const component = props.component;
+    const rest = { ...props };
+    delete rest["component"];
     return (
         <Fragment>
-            <Route {...rest} render={(props: PublicRouteProps) => <Component {...rest} />} />
+            <Route {...rest} render={() => React.createElement(component!, rest)} />
             <Footer />
         </Fragment>
     );

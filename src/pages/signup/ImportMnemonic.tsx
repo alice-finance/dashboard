@@ -6,18 +6,23 @@ import "./Mnemonic.scss";
 import useStoredWallet from "../../hook/useStoredWallet";
 import Alice from "@alice-finance/alice.js/dist";
 import cookie from "js-cookie";
-import { ChainContext } from "../../contexts/AliceContext";
+import { ChainContext } from "../../contexts/ChainContext";
 import { toast } from "react-toastify";
-import { Redirect } from "react-router";
-
-const useTestnet = false;
+import { Redirect } from "react-router-dom";
+import { useTestnet } from "../../constants/environment";
 
 const ImportMnemonic = () => {
     const { setMnemonic, setEthereumChain, setLoomChain } = useContext(ChainContext);
     const [mnemonic, setInputMnemonic] = useState("");
     const [password, setPassword] = useState("");
     const [auth, setAuth] = useState(false);
-    const wallet = useStoredWallet();
+    const {
+        setAliceAddress,
+        setEthAddress,
+        setMnemonicWithPassword,
+        setEthPrivateKey,
+        setAlicePrivateKey
+    } = useStoredWallet();
 
     const handleMnemonicChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         const value = event.target.value;
@@ -41,9 +46,11 @@ const ImportMnemonic = () => {
                 .areAccountsMapped()
                 .then(isMapped => {
                     if (isMapped) {
-                        wallet.setAliceAddress(loomChain.getAddress().toLocalAddressString());
-                        wallet.setEthAddress(ethChain.getAddress().toLocalAddressString());
-                        wallet.setMnemonicWithPassword(mnemonic, password);
+                        setAliceAddress(loomChain.getAddress().toLocalAddressString());
+                        setEthAddress(ethChain.getAddress().toLocalAddressString());
+                        setAlicePrivateKey(loomChain.getPrivateKey());
+                        setEthPrivateKey(ethChain.getPrivateKey());
+                        setMnemonicWithPassword(mnemonic, password);
 
                         setMnemonic(mnemonic);
                         setEthereumChain(ethChain);
@@ -60,7 +67,18 @@ const ImportMnemonic = () => {
                     toast.error(error);
                 });
         },
-        [mnemonic, wallet, password, setMnemonic, setEthereumChain, setLoomChain]
+        [
+            mnemonic,
+            setAliceAddress,
+            setEthAddress,
+            setAlicePrivateKey,
+            setEthPrivateKey,
+            setMnemonicWithPassword,
+            password,
+            setMnemonic,
+            setEthereumChain,
+            setLoomChain
+        ]
     );
 
     if (auth) {

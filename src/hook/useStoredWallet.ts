@@ -1,8 +1,10 @@
 import useStorage from "./useStorage";
 import SecureLS from "secure-ls";
+import useSessionStorage from "./useSessionStorage";
 
 const useStoredWallet = () => {
     const storage = useStorage();
+    const session = useSessionStorage();
 
     const reset = () => {
         localStorage.clear();
@@ -34,6 +36,22 @@ const useStoredWallet = () => {
         sstore.set("mnemonic", mnemonic);
     };
 
+    const setEthPrivateKey = (privateKey: string) => {
+        session.set("eth-key", privateKey);
+    };
+
+    const setAlicePrivateKey = (privateKey: string) => {
+        session.set("alice-key", privateKey);
+    };
+
+    const getEthPrivateKey = () => {
+        return session.get("eth-key");
+    };
+
+    const getAlicePrivateKey = () => {
+        return session.get("alice-key");
+    };
+
     return {
         reset,
         setAliceAddress,
@@ -41,7 +59,11 @@ const useStoredWallet = () => {
         setEthAddress,
         getEthAddress,
         setMnemonicWithPassword,
-        getMnemonicWithPassword
+        getMnemonicWithPassword,
+        setEthPrivateKey,
+        setAlicePrivateKey,
+        getEthPrivateKey,
+        getAlicePrivateKey
     };
 };
 

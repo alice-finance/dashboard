@@ -10,21 +10,30 @@ import LoginPage from "../pages/login";
 import SalaryPage from "../pages/salary";
 import TokenVestingPage from "../pages/tokenVesting";
 import DashboardPage from "../pages/dashboard";
+import SalaryViewPage from "../pages/salary/view";
+import TokenVestingViewPage from "../pages/tokenVesting/view";
 
 export const AppRouter: React.FC = () => {
     return (
         <Router>
             <Switch>
-                <PrivateRoute exact path="/salary" component={SalaryPage}/>
+                <PrivateRoute exact path="/salary" title="Salary" component={SalaryPage} />
+                <PrivateRoute exact path="/salary/view/:address" title="Salary Detail" component={SalaryViewPage} />
 
-                <PrivateRoute exact path="/token-vesting" component={TokenVestingPage}/>
+                <PrivateRoute exact path="/token-vesting" title="Token Vesting" component={TokenVestingPage} />
+                <PrivateRoute
+                    exact
+                    path="/token-vesting/view/:address"
+                    title="Token Vesting Detail"
+                    component={TokenVestingViewPage}
+                />
 
-                <PrivateRoute exact path="/" component={DashboardPage}/>
+                <PrivateRoute exact path="/" title="Dashboard" component={DashboardPage} />
 
-                <PublicRoute exact path="/login" component={LoginPage} />
-                <PublicRoute exact path="/signup" component={SignUp} />
-                <PublicRoute exact path="/signup/import" component={ImportMnemonic} />
-                <PublicRoute exact path="/signup/create" component={CreateMnemonic} />
+                <PublicRoute exact path="/login" title="Login" component={LoginPage} />
+                <PublicRoute exact path="/signup" title="SignUp" component={SignUp} />
+                <PublicRoute exact path="/signup/import" title="SignUp" component={ImportMnemonic} />
+                <PublicRoute exact path="/signup/create" title="SignUp" component={CreateMnemonic} />
             </Switch>
         </Router>
     );

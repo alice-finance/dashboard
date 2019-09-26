@@ -1,11 +1,11 @@
 import React from "react";
 
 interface FontAwesomeProps {
-  name: string;
+    name: string;
 }
 
 const FontAwesome = ({ name }: FontAwesomeProps) => {
-  // noinspection CheckTagEmptyBody
+    // noinspection CheckTagEmptyBody
     return <i className={`fa fa-${name}`}></i>;
 };
 
