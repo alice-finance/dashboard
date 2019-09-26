@@ -13,6 +13,7 @@ const useSalaryRegistry = () => {
 
     useEffect(() => {
         if (loomChain !== null) {
+            console.log(loomChain.config.chainId);
             const registry = new ethers.Contract(
                 require("@alice-finance/dao-contracts/networks/SalaryRegistry.json")[loomChain.config.chainId].address,
                 require("@alice-finance/dao-contracts/abis/SalaryRegistry.json"),
