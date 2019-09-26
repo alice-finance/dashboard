@@ -3,5 +3,22 @@
   "linterOptions": {
     "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
   },
-  "rules": {}
+  "rules": {
+    "interface-name": false,
+    "ordered-imports": [
+      true,
+      {
+        "grouped-imports": true,
+        "groups": [
+          {
+            "name": "react",
+            "match": "react",
+            "order": 0
+          }
+        ]
+      }
+    ],
+    "object-literal-sort-keys": false,
+    "no-empty": false
+  }
 }

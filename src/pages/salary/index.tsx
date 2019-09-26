@@ -1,54 +1,43 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@material-ui/core";
 import useSalaryRegistry from "../../hook/useSalaryRegistry";
-import { Contract } from "ethers";
 import { Link } from "react-router-dom";
-import { BigNumber } from "ethers/utils";
+import useSalary from "../../hook/useSalary";
 
-interface SalaryInfo {
-    currentClaimable?: BigNumber;
-    wage?: BigNumber;
-    totalClaimed?: BigNumber;
+interface SalaryInfoTableRowProps {
+    address: string | null;
 }
 
-const SalaryPage: React.FC = () => {
-    const { ready, getSalary, getClosedSalary } = useSalaryRegistry();
-    const [salaryAddress, setSalaryAddress] = useState(null);
-    const [salary, setSalary] = useState<Contract | null>(null);
-    const [salaryInfo, setSalaryInfo] = useState<SalaryInfo | null>();
-    const [closedSalary, setClosedSalary] = useState<Array<Contract>>([]);
+const SalaryInfoTableRow = ({ address }: SalaryInfoTableRowProps) => {
+    const { salaryInfo } = useSalary(address);
+
+    if (!salaryInfo) {
+        return (
+            <TableRow>
+                <TableCell colSpan={3}>Loading...</TableCell>
+            </TableRow>
+        );
+    }
+    return (
+        <TableRow>
+            <TableCell component="td">Salary Contract {salaryInfo.address}</TableCell>
+            <TableCell>
+                {salaryInfo && salaryInfo.currentClaimable ? salaryInfo.currentClaimable.toString() : 0}
+            </TableCell>
+            <TableCell component="td">
+                <Link to={`/salary/view/${salaryInfo.address}`}>View</Link>
+            </TableCell>
+        </TableRow>
+    );
+};
+
+const SalaryPage = () => {
+    const { ready, salaryAddress, getClosedSalaryAddressList } = useSalaryRegistry();
+    const [closedSalaryList, setClosedSalaryList] = useState<Array<string>>([]);
 
     useEffect(() => {
-        console.log("ready", ready);
-        if (ready) {
-            getSalary().then(contract => {
-                setSalary(contract);
-            });
-            getClosedSalary().then(contracts => {
-                setClosedSalary(contracts);
-            });
-        }
-    }, [ready, getSalary, setClosedSalary, getClosedSalary]);
-
-    useEffect(() => {
-        if (salary) {
-            salary.wage().then((wage: BigNumber) => {
-                setSalaryInfo(prevState => {
-                    return { ...prevState, wage: wage };
-                });
-            });
-            salary.totalClaimed().then((totalClaimed: BigNumber) => {
-                setSalaryInfo(prevState => {
-                    return { ...prevState, totalClaimed: totalClaimed };
-                });
-            });
-            salary.currentClaimable().then((currentClaimable: BigNumber) => {
-                setSalaryInfo(prevState => {
-                    return { ...prevState, currentClaimable: currentClaimable };
-                });
-            });
-        }
-    }, [salary]);
+        getClosedSalaryAddressList().then(result => setClosedSalaryList(result));
+    }, [getClosedSalaryAddressList, ready]);
 
     return (
         <Container className="wrapper">
@@ -64,21 +53,35 @@ const SalaryPage: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {salary !== null ? (
-                            <TableRow>
-                                <TableCell component="td">Salary Contract {salary.address}</TableCell>
-                                <TableCell>
-                                    {salaryInfo && salaryInfo.currentClaimable
-                                        ? salaryInfo.currentClaimable.toString()
-                                        : 0}
-                                </TableCell>
-                                <TableCell component="td">
-                                    <Link to={`/salary/view/${salary.address}`}>View</Link>
-                                </TableCell>
-                            </TableRow>
+                        {salaryAddress ? (
+                            <SalaryInfoTableRow address={salaryAddress} />
                         ) : (
                             <TableRow>
-                                <TableCell component="td">No contract available</TableCell>
+                                <TableCell colSpan={3} component="td">
+                                    No contract available
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+
+                <Typography component="h1">Closed Salary Contracts</Typography>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Contract Address</TableCell>
+                            <TableCell>Claimable</TableCell>
+                            <TableCell>&nbsp;</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {closedSalaryList.length > 0 ? (
+                            closedSalaryList.map((address, index) => <SalaryInfoTableRow key={index} address={address} />)
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={3} component="td">
+                                    No closed contracts
+                                </TableCell>
                             </TableRow>
                         )}
                     </TableBody>

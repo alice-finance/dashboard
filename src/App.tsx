@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { AppRouter } from "./routes/AppRouter";
 import { ContextProvider } from "./contexts";
 
-const App: React.FC = () => {
+const App = () => {
     return (
         <ContextProvider>
             <MuiThemeProvider theme={theme}>

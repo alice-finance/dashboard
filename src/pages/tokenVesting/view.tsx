@@ -9,7 +9,6 @@ import {
     createStyles,
     Grid,
     makeStyles,
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -17,6 +16,7 @@ import {
     Theme
 } from "@material-ui/core";
 import useStoredWallet from "../../hook/useStoredWallet";
+import { toast } from "react-toastify";
 
 interface MatchParams {
     address: string;
@@ -46,14 +46,12 @@ interface ClaimInfo {
 const useStyles = makeStyles((theme: Theme) => createStyles({ root: { padding: theme.spacing(3, 2) } }));
 
 const TokenVestingViewPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
-    const { getAliceAddress } = useStoredWallet();
-    const aliceAddress = getAliceAddress();
     const contractAddress = match.params.address;
     const { ready, getTokenVesting } = useTokenVestingRegistry();
     const [tokenVesting, setTokenVesting] = useState<Contract | null>(null);
     const [tokenVestingInfo, setTokenVestingInfo] = useState<TokenVestingInfo | null>();
     const [claimList, setClaimList] = useState<Array<ClaimInfo>>([]);
-    const classes = useStyles();
+    useStyles();
 
     useEffect(() => {
         if (ready) {
@@ -162,10 +160,10 @@ const TokenVestingViewPage: React.FC<RouteComponentProps<MatchParams>> = ({ matc
                     refresh();
                 })
                 .catch((e: Error) => {
-                    console.log(e);
+                    toast.error(e);
                 });
         }
-    }, [aliceAddress, refresh, tokenVesting]);
+    }, [refresh, tokenVesting]);
 
     return (
         <Container className="wrapper">

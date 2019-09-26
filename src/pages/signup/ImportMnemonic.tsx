@@ -9,7 +9,7 @@ import cookie from "js-cookie";
 import { ChainContext } from "../../contexts/ChainContext";
 import { toast } from "react-toastify";
 import { Redirect } from "react-router-dom";
-import { useTestnet } from "../../constants/environment";
+import { useTestNet } from "../../constants/environment";
 
 const ImportMnemonic = () => {
     const { setMnemonic, setEthereumChain, setLoomChain } = useContext(ChainContext);
@@ -38,7 +38,7 @@ const ImportMnemonic = () => {
         (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
-            const alice = Alice.fromMnemonic(mnemonic, useTestnet);
+            const alice = Alice.fromMnemonic(mnemonic, useTestNet);
             const ethChain = alice.getEthereumChain();
             const loomChain = alice.getLoomChain();
 

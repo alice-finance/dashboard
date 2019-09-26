@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Grid, Typography } from "@material-ui/core";
 import Image from "./Image";
 import "./BreadCrumbs.scss";

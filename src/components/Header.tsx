@@ -16,12 +16,10 @@ import {
 import React, { useCallback, useState, MouseEvent } from "react";
 import Logo from "./Logo";
 
-import UserDefaultImage from "../assets/images/author/user-image.jpg";
 import cookie from "js-cookie";
 import logo from "../assets/images/logo.svg";
 import { NavLink, Redirect } from "react-router-dom";
 import FontAwesome from "../utils/FontAwesome";
-import Image from "./Image";
 import { PopperPlacementType } from "@material-ui/core/Popper";
 import { ReferenceObject } from "popper.js";
 import { toast } from "react-toastify";
@@ -56,7 +54,7 @@ const Header = () => {
     const logOutHandler = useCallback(() => {
         cookie.remove("Auth");
 
-        toast.warn("You have been loged out");
+        toast.warn("You have been logged out");
 
         setOpen(false);
         setSideMenu(false);
@@ -68,7 +66,7 @@ const Header = () => {
         cookie.remove("Auth");
         reset();
 
-        toast.warn("You have been loged out");
+        toast.warn("You have reset your account");
 
         setOpen(false);
         setSideMenu(false);

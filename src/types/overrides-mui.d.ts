@@ -1,4 +1,3 @@
-import { Overrides } from "@material-ui/core/styles/overrides";
 import { MuiPickersOverrides } from "@material-ui/pickers/typings/overrides";
 
 type overridesNameToClassKey = {
@@ -6,5 +5,6 @@ type overridesNameToClassKey = {
 };
 
 declare module "@material-ui/core/styles/overrides" {
+    // noinspection JSUnusedGlobalSymbols
     export interface ComponentNameToClassKey extends overridesNameToClassKey {}
 }

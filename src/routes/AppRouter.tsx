@@ -13,7 +13,7 @@ import DashboardPage from "../pages/dashboard";
 import SalaryViewPage from "../pages/salary/view";
 import TokenVestingViewPage from "../pages/tokenVesting/view";
 
-export const AppRouter: React.FC = () => {
+export const AppRouter = () => {
     return (
         <Router>
             <Switch>

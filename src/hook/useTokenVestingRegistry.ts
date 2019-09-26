@@ -19,7 +19,6 @@ const useTokenVestingRegistry = () => {
                 require("@alice-finance/dao-contracts/abis/TokenVestingRegistry.json"),
                 loomChain.getSigner()
             );
-            console.log(registry.address);
 
             setRegistry(registry);
             setReady(true);

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@material-ui/core";
 import useTokenVestingRegistry from "../../hook/useTokenVestingRegistry";
 import { Contract } from "ethers";
@@ -11,7 +11,7 @@ interface TokenVestingInfo {
     totalClaimed?: BigNumber;
 }
 
-const TokenVestingPage: React.FC = () => {
+const TokenVestingPage = () => {
     const { ready, getTokenVestingList } = useTokenVestingRegistry();
     const [tokenVestingList, setTokenVestingList] = useState<Array<Contract>>([]);
     const [tokenVestingInfoList, setTokenVestingInfoList] = useState<Array<TokenVestingInfo>>([]);
@@ -26,7 +26,6 @@ const TokenVestingPage: React.FC = () => {
     };
 
     useEffect(() => {
-        console.log("ready", ready);
         if (ready) {
             getTokenVestingList().then(contracts => {
                 setTokenVestingList(contracts);
@@ -36,7 +35,7 @@ const TokenVestingPage: React.FC = () => {
 
     useEffect(() => {
         setTokenVestingInfoList(
-            tokenVestingList.map(v => {
+            tokenVestingList.map(() => {
                 return {};
             })
         );
@@ -62,7 +61,7 @@ const TokenVestingPage: React.FC = () => {
                         {tokenVestingList.length > 0 ? (
                             tokenVestingList.map((vesting, index) => {
                                 return (
-                                    <TableRow>
+                                    <TableRow key={index}>
                                         <TableCell component="td">TokenVesting Contract {vesting.address}</TableCell>
                                         <TableCell>
                                             {tokenVestingInfoList[index] && tokenVestingInfoList[index].currentClaimable

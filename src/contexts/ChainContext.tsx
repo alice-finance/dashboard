@@ -5,8 +5,9 @@ import LoomChain from "@alice-finance/alice.js/dist/chains/LoomChain";
 import { EMPTY_MNEMONIC } from "../constants/bip39";
 import useStoredWallet from "../hook/useStoredWallet";
 import Alice from "@alice-finance/alice.js/dist";
-import { useTestnet } from "../constants/environment";
+import { useTestNet } from "../constants/environment";
 
+// noinspection JSUnusedLocalSymbols
 export const ChainContext = React.createContext({
     isReadOnly: false,
     mnemonic: null as string | null,
@@ -29,12 +30,12 @@ export const ChainProvider: React.FC = ({ children }) => {
         const ethereumPrivateKey = getEthPrivateKey();
         const alicePrivateKey = getAlicePrivateKey();
         if (ethereumPrivateKey !== null && alicePrivateKey !== null && !ready) {
-            const alice = new Alice(ethereumPrivateKey, alicePrivateKey, useTestnet);
+            const alice = new Alice(ethereumPrivateKey, alicePrivateKey, useTestNet);
             setReady(true);
             setEthereumChain(alice.getEthereumChain());
             setLoomChain(alice.getLoomChain());
         }
-    }, [ready]);
+    }, [getAlicePrivateKey, getEthPrivateKey, ready]);
 
     return (
         <ChainContext.Provider
@@ -52,4 +53,4 @@ export const ChainProvider: React.FC = ({ children }) => {
     );
 };
 
-export const ChainConsumer = ChainContext.Consumer;
+

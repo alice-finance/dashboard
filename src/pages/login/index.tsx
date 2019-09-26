@@ -6,9 +6,9 @@ import { toast } from "react-toastify";
 import Alice from "@alice-finance/alice.js/dist";
 import cookie from "js-cookie";
 import { ChainContext } from "../../contexts/ChainContext";
-import { useTestnet } from "../../constants/environment";
+import { useTestNet } from "../../constants/environment";
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
     const { setMnemonic, setEthereumChain, setLoomChain } = useContext(ChainContext);
     // const { history } = useReactRouter();
     const { getEthAddress, getMnemonicWithPassword, setAlicePrivateKey, setEthPrivateKey, reset } = useStoredWallet();
@@ -26,9 +26,8 @@ const LoginPage: React.FC = () => {
 
             try {
                 const mnemonic = getMnemonicWithPassword(password);
-                console.log(mnemonic);
 
-                const alice = Alice.fromMnemonic(mnemonic, useTestnet);
+                const alice = Alice.fromMnemonic(mnemonic, useTestNet);
                 const ethChain = alice.getEthereumChain();
                 const loomChain = alice.getLoomChain();
 
@@ -83,8 +82,8 @@ const LoginPage: React.FC = () => {
     }
 
     return (
-        <Container className="wrapper">
-            <Grid container className="section">
+        <Container>
+            <Grid container>
                 <Grid item>
                     <form onSubmit={handleSubmit}>
                         <Typography component="h1">Login</Typography>

@@ -1,116 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
-import useSalaryRegistry from "../../hook/useSalaryRegistry";
-import { Contract } from "ethers";
+import React, { useCallback } from "react";
 import { BigNumber } from "ethers/utils";
 import { RouteComponentProps } from "react-router-dom";
-import {
-    Button,
-    Container,
-    createStyles,
-    Grid,
-    makeStyles,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    Theme
-} from "@material-ui/core";
+import { Button, Container, Grid, Table, TableBody, TableCell, TableRow } from "@material-ui/core";
 import useStoredWallet from "../../hook/useStoredWallet";
+import useSalary from "../../hook/useSalary";
 
 interface MatchParams {
     address: string;
 }
 
-interface SalaryInfo {
-    interval?: BigNumber;
-    currentClaimable?: BigNumber;
-    wage?: BigNumber;
-    totalClaimed?: BigNumber;
-    lastClaimedTimestamp?: Date;
-}
-
-interface ClaimInfo {
-    amount: BigNumber;
-    timestamp: Date;
-}
-
-const useStyles = makeStyles((theme: Theme) => createStyles({ root: { padding: theme.spacing(3, 2) } }));
-
 const SalaryViewPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
     const { getAliceAddress } = useStoredWallet();
-    const aliceAddress = getAliceAddress();
+    getAliceAddress();
     const contractAddress = match.params.address;
-    const { ready, getSalary } = useSalaryRegistry();
-    const [salary, setSalary] = useState<Contract | null>(null);
-    const [salaryInfo, setSalaryInfo] = useState<SalaryInfo | null>();
-    const [claimList, setClaimList] = useState<Array<ClaimInfo>>([]);
-    const classes = useStyles();
-
-    useEffect(() => {
-        if (ready) {
-            getSalary(contractAddress).then(r => setSalary(r));
-        }
-    }, [contractAddress, getSalary, ready]);
-
-    const refresh = useCallback(() => {
-        if (salary) {
-            salary.interval().then((interval: BigNumber) => {
-                setSalaryInfo(prevState => {
-                    return { ...prevState, interval: interval };
-                });
-            });
-            salary.wage().then((wage: BigNumber) => {
-                setSalaryInfo(prevState => {
-                    return { ...prevState, wage: wage };
-                });
-            });
-            salary.totalClaimed().then((totalClaimed: BigNumber) => {
-                setSalaryInfo(prevState => {
-                    return { ...prevState, totalClaimed: totalClaimed };
-                });
-            });
-            salary.currentClaimable().then((currentClaimable: BigNumber) => {
-                setSalaryInfo(prevState => {
-                    return { ...prevState, currentClaimable: currentClaimable };
-                });
-            });
-            salary.lastClaimedTimestamp().then((lastClaimedTimestamp: BigNumber) => {
-                if (lastClaimedTimestamp.gt(new BigNumber(0))) {
-                    setSalaryInfo(prevState => {
-                        const date = new Date(lastClaimedTimestamp.toNumber() * 1000);
-                        return { ...prevState, lastClaimedTimestamp: date };
-                    });
-                }
-            });
-            salary.getClaimLogs().then((result: Array<Array<BigNumber>>) => {
-                const amounts = result[0];
-                const timestamps = result[1];
-                setClaimList(
-                    amounts.map((v, i) => {
-                        return { amount: v, timestamp: new Date(timestamps[i].toNumber() * 1000) };
-                    })
-                );
-            });
-        }
-    }, [salary]);
-
-    useEffect(() => {
-        refresh();
-    }, [refresh]);
+    const { salaryInfo, claimList, claim } = useSalary(contractAddress);
 
     const handleClaim = useCallback(() => {
-        if (salary) {
-            salary
-                .claim({ gasLimit: 0 })
-                .then(() => {
-                    refresh();
-                })
-                .catch((e: Error) => {
-                    console.log(e);
-                });
-        }
-    }, [refresh, salary]);
+        claim();
+    }, [claim]);
 
     return (
         <Container className="wrapper">
